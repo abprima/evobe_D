@@ -765,8 +765,6 @@ with tabs[1]:
         """
     )
 
-    st.divider()
-
     # ==========================================================
     # Initialize Session State
     # ==========================================================
@@ -781,13 +779,11 @@ with tabs[1]:
     # Analysis Scope
     # ==========================================================
 
-    st.subheader("ðŸ“Š Analysis Scope")
-
     analysis_scope = st.radio(
         "Choose Analysis Type",
         [
             "Student CPMK/CPL Performance",
-            "CPMK Ã— CPL Mapping Analysis",
+            "CPMK x CPL Mapping Analysis",
             "Comprehensive Analysis"
         ],
         horizontal=True
@@ -842,13 +838,13 @@ with tabs[1]:
     # ==========================================================
 
     if st.button(
-        "ðŸ“¥ Load Dataset",
+        "Load Dataset",
         use_container_width=True
     ):
 
         datasets = {}
 
-        with st.spinner("Loading dataset from MySQL..."):
+        with st.spinner("Thinking..."):
 
             with engine_dfsql.connect() as conn:
 
