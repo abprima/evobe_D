@@ -41,7 +41,6 @@ with tabs[0]:
     st.subheader("📙 Head of Department Dashboard")
 
     st.success("""
-    ### 🎯 Decision Support System
     This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.
     """)
 
