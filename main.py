@@ -41,7 +41,7 @@ with tabs[0]:
     st.subheader("📘 Department Dashboard")
 
     st.info("""
-    **This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.**
+    This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.**
     """)
 
     with st.expander("❓ What questions can this dashboard answer?"):
