@@ -38,23 +38,20 @@ tabs = st.tabs(["👑 CPL Achievement Report", "🚀 Melesat Generative AI" ])
 # Tab 1: Content
 # --------------------------
 with tabs[0]:
-    st.subheader("📙 Head of Department Dashboard")
+    st.subheader("📘 Department Dashboard")
 
-    st.success("""
-    This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.
+    st.info("""
+    **This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.**
     """)
 
-    st.write("### 👑 CPL Achievement")
+    with st.expander("❓ What questions can this dashboard answer?"):
 
-    st.markdown("""This dashboard summarizes the CPL achievement of all courses within the department. Write your member code, then click **Synchronize**.""")
-
-    with st.expander("🔍 Key Questions Answered"):
         st.markdown("""
-    ✅ Are all Program Learning Outcomes (CPLs) being achieved?
-    ✅ Which CPLs require immediate improvement?
-    ✅ Which courses contribute to each CPL?
-    ✅ Which courses have the lowest CPL achievement?
-    ✅ Which CPLs should become the priority for CQI in the next academic cycle?
+    - Are all Program Learning Outcomes (CPLs) being achieved?
+    - Which CPLs require immediate improvement?
+    - Which courses contribute to each CPL?
+    - Which courses have the lowest CPL achievement?
+    - Which CPLs should become the priority for CQI in the next academic cycle?
     """)
 
     st.write("### 👑 CPL Achievement")
