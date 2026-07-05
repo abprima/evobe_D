@@ -41,16 +41,7 @@ with tabs[0]:
     st.subheader("📙 Head of Department Dashboard")
 
     st.success("""
-    This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.
-    """)
-
-    with st.expander("🔍 Key Questions Answered"):
-        st.markdown("""
-    ✅ Are all Program Learning Outcomes (CPLs) being achieved?
-    ✅ Which CPLs require immediate improvement?
-    ✅ Which courses contribute to each CPL?
-    ✅ Which courses have the lowest CPL achievement?
-    ✅ Which CPLs should become the priority for CQI in the next academic cycle?
+    Melesat Generative AI is an AI-powered academic decision support system that enables lecturers, heads of department, and faculty leaders to monitor Outcome-Based Education (OBE) implementation through interactive dashboards and natural language conversations. Users can ask questions about CPMK achievement, CPL attainment, course performance, curriculum effectiveness, and Continuous Quality Improvement (CQI), and receive data-driven insights generated directly from the available assessment data.
     """)
 
     st.write("### 👑 CPL Achievement")
