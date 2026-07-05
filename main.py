@@ -11,6 +11,7 @@ import matplotlib.colors as mcolors
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine, text
+from openai import OpenAI
 
 load_dotenv()
 
@@ -26,13 +27,32 @@ engine_dfsql = create_engine(
     future=True
 )
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key = OPENAI_API_KEY)
+
+
 # Create tabs using st.tabs()
-tabs = st.tabs(["👑 CPL Achievement"])
+tabs = st.tabs(["👑 CPL Achievement Report", "🚀 Melesat Generative AI" ])
 
 # --------------------------
 # Tab 1: Content
 # --------------------------
 with tabs[0]:
+    st.subheader("📙 Head of Department Dashboard")
+
+    st.success("""
+    ### 🎯 Decision Support System
+    This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.
+    """)
+
+    with st.expander("🔍 Key Questions Answered"):
+        st.markdown("""
+    ✅ Are all Program Learning Outcomes (CPLs) being achieved?
+    ✅ Which CPLs require immediate improvement?
+    ✅ Which courses contribute to each CPL?
+    ✅ Which courses have the lowest CPL achievement?
+    ✅ Which CPLs should become the priority for CQI in the next academic cycle?
+    """)
 
     st.write("### 👑 CPL Achievement")
 
@@ -729,3 +749,269 @@ with tabs[0]:
     else:
 
         st.info("👆 Please enter your unique code and click **Synchronize**.")
+
+# --------------------------
+# Tab 2
+# --------------------------
+with tabs[1]:
+
+
+    st.write("### 🚀 Melesat Generative AI")
+    st.success(
+        """
+    Select the type of analysis you want the AI to perform.
+    The system will automatically retrieve the required data
+    from the database and prepare it for AI analysis.
+    """)
+
+    st.divider()
+
+    # ==========================================================
+    # Initialize Session State
+    # ==========================================================
+
+    if "ai_datasets" not in st.session_state:
+        st.session_state.ai_datasets = {}
+
+    if "analysis_scope" not in st.session_state:
+        st.session_state.analysis_scope = None
+
+    # ==========================================================
+    # Analysis Scope
+    # ==========================================================
+
+    st.subheader("ðŸ“Š Analysis Scope")
+
+    analysis_scope = st.radio(
+        "Choose Analysis Type",
+        [
+            "Student CPMK/CPL Performance",
+            "CPMK Ã— CPL Mapping Analysis",
+            "Comprehensive Analysis"
+        ],
+        horizontal=True
+    )
+
+    # ==========================================================
+    # Academic Year
+    # ==========================================================
+
+    with engine_dfsql.connect() as conn:
+
+        year_df = pd.read_sql(
+            text("""
+                SELECT DISTINCT academic_year
+                FROM course_cpl_summary
+                ORDER BY academic_year DESC
+            """),
+            conn
+        )
+
+    selected_year = st.selectbox(
+        "Academic Year",
+        year_df["academic_year"]
+    )
+
+    # ==========================================================
+    # Semester
+    # ==========================================================
+
+    with engine_dfsql.connect() as conn:
+
+        semester_df = pd.read_sql(
+            text("""
+                SELECT DISTINCT semester
+                FROM course_cpl_summary
+                WHERE academic_year=:year
+                ORDER BY semester
+            """),
+            conn,
+            params={
+                "year": selected_year
+            }
+        )
+
+    selected_semester = st.selectbox(
+        "Semester",
+        semester_df["semester"]
+    )
+
+    # ==========================================================
+    # Load Dataset
+    # ==========================================================
+
+    if st.button(
+        "ðŸ“¥ Load Dataset",
+        use_container_width=True
+    ):
+
+        datasets = {}
+
+        with st.spinner("Loading dataset from MySQL..."):
+
+            with engine_dfsql.connect() as conn:
+
+                # ==============================================
+                # Student CPMK/CPL Performance
+                # ==============================================
+
+                if analysis_scope == "Student CPMK/CPL Performance":
+
+                    student_df = pd.read_sql(
+
+                        text("""
+
+                        SELECT *
+                        FROM student_cpmk_result
+                        WHERE department=:department
+                        AND academic_year=:academic_year
+                        AND semester=:semester
+                        ORDER BY course_name,
+                                 student_name
+
+                        """),
+
+                        conn,
+
+                        params={
+
+                            "department": st.session_state.department,
+                            "academic_year": selected_year,
+                            "semester": selected_semester
+
+                        }
+
+                    )
+
+                    datasets["student"] = student_df
+
+                # ==============================================
+                # CPMK Ã— CPL Mapping
+                # ==============================================
+
+                elif analysis_scope == "CPMK Ã— CPL Mapping Analysis":
+
+                    course_df = pd.read_sql(
+
+                        text("""
+
+                        SELECT *
+                        FROM course_cpl_summary
+                        WHERE department=:department
+                        AND academic_year=:academic_year
+                        AND semester=:semester
+                        ORDER BY course_name
+
+                        """),
+
+                        conn,
+
+                        params={
+
+                            "department": st.session_state.department,
+                            "academic_year": selected_year,
+                            "semester": selected_semester
+
+                        }
+
+                    )
+
+                    datasets["course"] = course_df
+
+                # ==============================================
+                # Comprehensive Analysis
+                # ==============================================
+
+                else:
+
+                    course_df = pd.read_sql(
+
+                        text("""
+
+                        SELECT *
+                        FROM course_cpl_summary
+                        WHERE department=:department
+                        AND academic_year=:academic_year
+                        AND semester=:semester
+                        ORDER BY course_name
+
+                        """),
+
+                        conn,
+
+                        params={
+
+                            "department": st.session_state.department,
+                            "academic_year": selected_year,
+                            "semester": selected_semester
+
+                        }
+
+                    )
+
+                    student_df = pd.read_sql(
+
+                        text("""
+
+                        SELECT *
+                        FROM student_cpmk_result
+                        WHERE department=:department
+                        AND academic_year=:academic_year
+                        AND semester=:semester
+                        ORDER BY course_name,
+                                 student_name
+
+                        """),
+
+                        conn,
+
+                        params={
+
+                            "department": st.session_state.department,
+                            "academic_year": selected_year,
+                            "semester": selected_semester
+
+                        }
+
+                    )
+
+                    datasets["course"] = course_df
+                    datasets["student"] = student_df
+
+        st.session_state.ai_datasets = datasets
+        st.session_state.analysis_scope = analysis_scope
+
+        st.success("Dataset successfully loaded.")
+
+    # ==========================================================
+    # Dataset Preview
+    # ==========================================================
+
+    if st.session_state.ai_datasets:
+
+        st.divider()
+
+        st.subheader("ðŸ“‹ Dataset Preview")
+
+        for dataset_name, df in st.session_state.ai_datasets.items():
+
+            with st.expander(
+                f"{dataset_name.upper()} ({len(df):,} rows)",
+                expanded=True
+            ):
+
+                col1, col2 = st.columns(2)
+
+                col1.metric("Rows", len(df))
+                col2.metric("Columns", len(df.columns))
+
+                st.dataframe(
+                    df.head(20),
+                    use_container_width=True,
+                    hide_index=True
+                )
+
+        st.success(
+            "The selected dataset(s) are ready. In Part 2B, they will be converted "
+            "into AI context and sent to the OpenAI API for conversational analysis."
+        )
