@@ -41,7 +41,20 @@ with tabs[0]:
     st.subheader("📙 Head of Department Dashboard")
 
     st.success("""
-    Melesat Generative AI is an AI-powered academic decision support system that enables lecturers, heads of department, and faculty leaders to monitor Outcome-Based Education (OBE) implementation through interactive dashboards and natural language conversations. Users can ask questions about CPMK achievement, CPL attainment, course performance, curriculum effectiveness, and Continuous Quality Improvement (CQI), and receive data-driven insights generated directly from the available assessment data.
+    This dashboard enables evidence-based curriculum monitoring and Continuous Quality Improvement (CQI) by analyzing CPL achievement across all courses.
+    """)
+
+    st.write("### 👑 CPL Achievement")
+
+    st.markdown("""This dashboard summarizes the CPL achievement of all courses within the department. Write your member code, then click **Synchronize**.""")
+
+    with st.expander("🔍 Key Questions Answered"):
+        st.markdown("""
+    ✅ Are all Program Learning Outcomes (CPLs) being achieved?
+    ✅ Which CPLs require immediate improvement?
+    ✅ Which courses contribute to each CPL?
+    ✅ Which courses have the lowest CPL achievement?
+    ✅ Which CPLs should become the priority for CQI in the next academic cycle?
     """)
 
     st.write("### 👑 CPL Achievement")
@@ -749,10 +762,11 @@ with tabs[1]:
     st.write("### 🚀 Melesat Generative AI")
     st.success(
         """
-    Select the type of analysis you want the AI to perform.
-    The system will automatically retrieve the required data
-    from the database and prepare it for AI analysis.
-    """)
+        Ask anything regarding OBE assessment, CPMK achievement,
+        CPL achievement, student performance, or department performance.
+        The AI will only answer based on the selected database table(s).
+        """
+    )
 
     st.divider()
 
